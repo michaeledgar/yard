@@ -88,7 +88,7 @@ describe YARD::Docstring do
       doc = Docstring.new("@param blah THIS_BREAKS_REFTAG (see Foo#bar)")
       doc.ref_tags.size.should == 0
     end
-  
+    
     it "should return all valid reference tags along with #tags" do
       o = CodeObjects::MethodObject.new(:root, 'Foo#bar')
       o.docstring.add_tag Tags::Tag.new('return', 'testing')
@@ -116,6 +116,20 @@ describe YARD::Docstring do
       doc = Docstring.new("@param *args (see INVALID::TAG#tag)")
       tags = doc.tags('param')
       tags.size.should == 0
+    end
+    
+    it "resolves references to methods in the same class with #methname" do
+      klass = CodeObjects::ClassObject.new(:root, "Foo")
+      o = CodeObjects::MethodObject.new(klass, "bar")
+      ref = CodeObjects::MethodObject.new(klass, "baz")
+      o.docstring.add_tag Tags::Tag.new('param', 'testing', nil, 'arg1')
+      ref.docstring = "@param (see #bar)"
+      
+      tags = ref.docstring.tags("param")
+      tags.size.should == 1
+      tags.first.text.should == "testing"
+      tags.first.should be_kind_of(Tags::RefTag)
+      tags.first.owner.should == o
     end
   end
   
