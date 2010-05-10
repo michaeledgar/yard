@@ -59,3 +59,17 @@ class A
     def q; end
   end
 end
+
+module Temp
+  if x
+    class A
+	  def another
+	  end
+    end
+  else
+    class A
+      def silly
+      end
+    end
+  end
+end
