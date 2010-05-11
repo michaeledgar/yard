@@ -16,28 +16,28 @@ describe "YARD::Handlers::Ruby::#{RUBY18 ? "Legacy::" : ""}ClassConditionHandler
     verify_method :h
   end
   
-  it "should only parse then block if condition is literal value `true`" do
-    verify_method :p
-  end
-  
-  it "should only parse then block if condition is literal integer != 0" do
-    verify_method :o
-  end
-  
-  it "should invert block to parse for literal condition if it's an unless block" do
-    verify_method :e
-  end
-  
-  it "should handle conditions such as 'defined? VALUE'" do
-    verify_method :j, :k
-  end
-  
   it "should traverse if-else for class definitions" do
     Registry.at("Temp::A#another").should_not be_nil
     Registry.at("Temp::A#silly").should_not be_nil
   end
   
   if RUBY19
+    it "should only parse then block if condition is literal value `true`" do
+      verify_method :p
+    end
+
+    it "should only parse then block if condition is literal integer != 0" do
+      verify_method :o
+    end
+
+    it "should invert block to parse for literal condition if it's an unless block" do
+      verify_method :e
+    end
+
+    it "should handle conditions such as 'defined? VALUE'" do
+      verify_method :j, :k
+    end
+    
     it "should parse all if/elsif blocks for complex conditions" do
       verify_method :a, :b, :c, :d
     end
